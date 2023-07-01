@@ -1,10 +1,13 @@
 const User = require('./models/User')
 const Role = require('./models/Role')
 const Elev = require('./models/Elev')
+const ElevM1 = require('./models/ElevMed1')
+const ElevM2 = require('./models/ElevMed2')
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { validationResult } = require('express-validator')
 const {secret} = require("./config")
+const ElevMed1 = require('./models/ElevMed1')
 
 const generateAccessToken = (id, roles) => {
     const payload = {
@@ -83,6 +86,82 @@ class authController{
         console.error('Error adding student:', error);
     }
   };
+ 
+
+  async addMed(req, res) {
+    async function GetMedia(str) {
+      var numberPattern = /\d+/g; // Regular expression to match one or more digits
+      var numbers = str.match(numberPattern); // Extract all numbers from the string
+      var sum = 0;
+  
+      if (numbers) {
+        for (var i = 0; i < numbers.length; i++) {
+          sum += parseInt(numbers[i]); // Convert each number to an integer and add to the sum
+        }
+        sum /= i;
+      }
+      return sum;
+    }
+  
+    try {
+      const oldStudents = await Elev.find(); // Get all students from the old database
+      
+      if (!oldStudents || oldStudents.length === 0) {
+        return res.status(404).json({ message: 'No students found in the old database' });
+      }
+  
+      for (const oldStudent of oldStudents) {
+        const Elev = await ElevM1.findOne({ IDNP: oldStudent.IDNP }); // Check if student already exists in the new database
+
+      if (Elev) {
+        console.log(`Student with IDNP ${oldStudent.IDNP} already exists in the new database. Skipping...`);
+        continue; // Skip adding the student
+      }
+
+        const romanaMedia = await GetMedia(oldStudent.Romana);
+        const mateMedia = await GetMedia(oldStudent.Mate);
+        const infoMedia = await GetMedia(oldStudent.Info);
+        const istoriaMedia = await GetMedia(oldStudent.Istoria);
+        const geografiaMedia = await GetMedia(oldStudent.Geografia);
+        const chimiaMedia = await GetMedia(oldStudent.Chimia);
+        const fizicaMedia = await GetMedia(oldStudent.Fizica);
+        const edFizMedia = await GetMedia(oldStudent.Ed_Fiz);
+        const francezaMedia = await GetMedia(oldStudent.Franceza);
+        const englezaMedia = await GetMedia(oldStudent.Engleza);
+        const biologiaMedia = await GetMedia(oldStudent.Biologia);
+        const rusaMedia = await GetMedia(oldStudent.Rusa);
+  
+        const newElev = new ElevM1({
+          IDNP: oldStudent.IDNP,
+          Name: oldStudent.Name,
+          Surname: oldStudent.Surname,
+          Class: oldStudent.Class,
+          Romana: romanaMedia,
+          Mate: mateMedia,
+          Info: infoMedia,
+          Istoria: istoriaMedia,
+          Geografia: geografiaMedia,
+          Chimia: chimiaMedia,
+          Fizica: fizicaMedia,
+          Ed_Fiz: edFizMedia,
+          Franceza: francezaMedia,
+          Engleza: englezaMedia,
+          Biologia: biologiaMedia,
+          Rusa: rusaMedia
+        });
+  
+        await newElev.save();
+      }
+  
+      return res.json({ message: "Students successfully copied to the new database!" });
+    } catch (error) {
+      console.error('Error copying students:', error);
+      return res.status(500).json({ message: 'Server error' });
+    }
+  };
+
+  
+
   
   async postElev(req, res) {
     try {
@@ -110,6 +189,7 @@ class authController{
       existingStudent.Engleza = Engleza;
       existingStudent.Biologia = Biologia;
       existingStudent.Rusa = Rusa;
+      
       // Romana, Mate, Info, Istoria, Geografia, Chimia, Fizica, Ed_Fiz, Franceza, Engleza, Bio, Rusa
   
       const updatedStudent = await existingStudent.save();
@@ -146,8 +226,6 @@ class authController{
         return res.status(500).json({ message: 'Server error' });
         }
     }
-
-   
     
     async deleteElev(req, res) {
         try {
@@ -167,7 +245,6 @@ class authController{
           return res.status(500).json({ message: 'Server error' });
         }
       }
-
       
       async getClass(req, res) {
       try {
@@ -181,7 +258,31 @@ class authController{
         // Assuming you have a data source or database
         // Retrieve the students based on the selected class
         const students = await Elev.find(query);
+
+        if (students.length > 0) {
+          res.status(200).json(students); // Return the students data as JSON response
+        } else {
+          res.status(404).json({ message: 'No students found' });
+        }
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+      }
+      };
+
+      async getClassMed1(req, res) {
+      try {
+        const { class: selectedClass } = req.query;
+        let query = {};
       
+        if (selectedClass) {
+          query.Class = selectedClass;
+        }
+      
+        // Assuming you have a data source or database
+        // Retrieve the students based on the selected class
+        const students = await ElevMed1.find(query);
+
         if (students.length > 0) {
           res.status(200).json(students); // Return the students data as JSON response
         } else {

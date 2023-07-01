@@ -73,6 +73,11 @@ body{
   outline: none;
   background: transparent;
 }
+
+.add{
+  margin-right: 5%;
+}
+
 .login-box .user-box label {
   position: relative;
   top:0;
@@ -123,17 +128,24 @@ body{
   right: 1%;
   left: 85%;
 }
+
 .logout{
-  position: absolute;
+  position:relative;
   right: 1%;
-  top: 1%;
+  top: 0.1%;
+  left: 91%;
 }
 
 .home{
-  position: absolute;
-  left: 1%;
-  top: 1%;
+  position: relative;
+  left: 0.5%;
+  top: 0.1%;
 }
+
+.admn{
+  margin-left: 1%;
+}
+
 
 @keyframes App-logo-spin {
   from {

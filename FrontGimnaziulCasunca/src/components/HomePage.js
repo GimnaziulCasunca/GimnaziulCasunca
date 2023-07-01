@@ -38,7 +38,7 @@ export const HomePage = () => {
 
   return (
   <div>
-  <Link to = "/"><button><h3><b>Home</b></h3></button></Link>
+  <Link to = "/" class="home"><button><h3><b>Home</b></h3></button></Link>
 
   <div class = "login-box">
     <form onSubmit = {LogIn}>
@@ -58,9 +58,9 @@ export const HomePage = () => {
     </form>   
 
     {isUserExist ? (
-          <Link to="/modify">Go to Modify</Link>
+          console.log("userislogin")
         ) : (
-          <p>{searchError}</p>
+          console.log(searchError)
         )}
     
   </div>

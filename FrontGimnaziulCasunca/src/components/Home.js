@@ -26,7 +26,7 @@ export const Home = () => {
     
     return (
 <div>
-    <Link to = "/login"><button><h3><b>Log In</b></h3></button></Link>
+    <Link to = "/login" class="home"><button><h3><b>Log In</b></h3></button></Link>
      <div class = "login-box">
       <h2>Search Elev:</h2>
       <form onSubmit={ShowElev}>

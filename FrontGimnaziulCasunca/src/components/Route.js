@@ -22,14 +22,16 @@ export const AddStudentForm = () => {
   const [Biologia, setBiologia] = React.useState('');
   const [Rusa, setRusa] = React.useState('');
   const [studentsData, setStudentsData] = useState([]);
+  const [studentsDataSem, setStudentsDataSem] = useState([]);
   const [responseMessage, setResponseMessage] = useState('');
   const [searchIDNP, setSearchIDNP] = useState('');
   const [searchedStudent, setSearchedStudent] = useState(null);
   const [findStudent, setFindStudent] = useState(null);
   const [searchError, setSearchError] = useState('');
   const [selectedClass, setSelectedClass] = useState('');
+  const [selectedClasSem, setSelectedClasSem] = useState('');
+  const [selectedSem, setSelectedSem] = useState('');
   // let Obiecte = {Romana, Mate, Info, Istoria, Geografia, Chimia, Fizica, Ed_Fiz, Franceza, Engleza, Biologia, Rusa}
-  
   let message = "";
     // adaugarea unui nou elev
     const AddStudent = async (e) => {
@@ -76,8 +78,11 @@ export const AddStudentForm = () => {
       try {
           const studentData = { IDNP, Name, Surname, Class, Romana, Mate, Info, Istoria, Geografia, Chimia, Fizica, Ed_Fiz, Franceza, Engleza, Biologia, Rusa };
           const response = await axios.get('/elevi', studentData);
-          setStudentsData(response.data); 
-          setResponseMessage(''); 
+          const elev = response.data;
+          
+          console.log(elev)
+          setStudentsData(elev);
+          setResponseMessage('');
         }
         catch (error) {
         console.error('Error creating elev:', error.message);
@@ -89,13 +94,16 @@ export const AddStudentForm = () => {
       }
   };
 
+
  //Un elev dupa idnp
   const ShowElev = async (e) => {
     e.preventDefault();
     if(FinToken){
       try {
         const response = await axios.get(`/elev/${searchIDNP}`);
-        setSearchedStudent(response.data);
+        const elev = response.data;
+
+        setSearchedStudent(elev);
         setSearchError('');
       } catch (error) {
           if (error.response && error.response.status === 404) {
@@ -113,6 +121,7 @@ export const AddStudentForm = () => {
       }
   };
 
+ 
  //Un elev in input pentru a putea modifica 
   const FindElev = async (e) => {
     e.preventDefault();
@@ -220,12 +229,15 @@ export const AddStudentForm = () => {
     }
 
   };
+
   
   const getStudentsByClass = async () => {
     if(FinToken){
       try {
         const response = await axios.get(`/getclass?class=${selectedClass}`);
-        setStudentsData(response.data);
+        const elev = response.data;
+
+        setStudentsData(elev);
         setResponseMessage('');
       } catch (error) {
         console.error('Error fetching students by class:', error.message);
@@ -237,6 +249,25 @@ export const AddStudentForm = () => {
     }
   };
 
+  const getStudentsByClassMed = async () => {
+    if(FinToken){
+      try {
+        const newmed = await axios.get(`/newmed`);
+        console.log(newmed.data);
+        const response = await axios.get(`/getclassmed1?class=${selectedSem}`);
+        setStudentsDataSem(response.data);
+        setResponseMessage('');
+      } catch (error) {
+        console.error('Error fetching students by class:', error.message);
+      }
+    }else 
+    {
+      message = "Please login";
+      alert(message);
+    }
+  };
+  
+
   const logout = async () => {
       try {
         localStorage.setItem('token', '')
@@ -246,103 +277,104 @@ export const AddStudentForm = () => {
       }
   };
 
+  
+
 
   return (
 
     <div>
-      
       <Link to = "/"><button class="home"><h3><b>Home</b></h3></button></Link>
       <Link to = "/login"><button onClick={logout} class="logout"><h3><b>LogOut</b></h3></button></Link>
-      
     <div class = "login-box">
       <form class="modify">
       <h2>Add/Modify elev:</h2>
-        <label>
-          IDNP:
-          <input type="text" value={IDNP} onChange={(e) => setIdnp(e.target.value)} />
-        </label>
-        <br />
-        <button onClick={FindElev}>Find</button>
-        <button onClick={DelElev}>Delete</button>
-        <br />
-        <label>
-          Name:
-          <input type="text" value={Name} onChange={(e) => setName(e.target.value)} />
-        </label>
-        <br />
-        <label>
-          Surname:
-          <input type="text" value={Surname} onChange={(e) => setSurname(e.target.value)} />
-        </label>
-        <br />
-        <label>
-          Class:
-          <input type="text" value={Class} onChange={(e) => setClass(e.target.value)} />
-        </label>
-        <br />
-        <label>
-          Romana:
-          <input type="text" value={Romana} onChange={(e) => setRomana(e.target.value)} />
-        </label>
-        <label>
-          Matematica:
-          <input type="text" value={Mate} onChange={(e) => setMate(e.target.value)} />
-        </label>
-        <br />
-        <label>
-          Info:
-          <input type="text" value={Info} onChange={(e) => setInfo(e.target.value)} />
-        </label>
-        <br />
-        <label>
-          Istoria:
-          <input type="text" value={Istoria} onChange={(e) => setIstoria(e.target.value)} />
-        </label>
-        <br />
-        <label>
-          Geografia:
-          <input type="text" value={Geografia} onChange={(e) => setGeografia(e.target.value)} />
-        </label>
-        <br />
-        <label>
-          Chimia:
-          <input type="text" value={Chimia} onChange={(e) => setChimia(e.target.value)} />
-        </label>
-        <br />
-        <label>
-          Fizica:
-          <input type="text" value={Fizica} onChange={(e) => setFizica(e.target.value)} />
-        </label>
-        <br />
-        <label>
-          Ed. Fizica:
-          <input type="text" value={Ed_Fiz} onChange={(e) => setEd_Fiz(e.target.value)} />
-        </label>
-        <br />
-        <label>
-          Franceza:
-          <input type="text" value={Franceza} onChange={(e) => setFranceza(e.target.value)} />
-        </label>
-        <br />
-        <label>
-          Engleza:
-          <input type="text" value={Engleza} onChange={(e) => setEngleza(e.target.value)} />
-        </label>
-        <br />
-        <label>
-          Biologia:
-          <input type="text" value={Biologia} onChange={(e) => setBiologia(e.target.value)} />
-        </label>
-        <br />
-        <label>
-          Rusa:
-          <input type="text" value={Rusa} onChange={(e) => setRusa(e.target.value)} />
-        </label>
-        <br />
+        <tr>
+         <td> IDNP:</td>
+         <td> <input type="text" class="adds" value={IDNP} onChange={(e) => setIdnp(e.target.value)} /></td>
+        </tr>
+
+        <td colSpan={2}><button onClick={FindElev} class = "admn">Find</button>
+        <button onClick={DelElev} class = "admn">Delete</button></td>
+
+        <tr>
+          <td> Name:</td>
+          <td> <input type="text" class="add" value={Name} onChange={(e) => setName(e.target.value)} /></td>
+        </tr>
+
+        <tr>
+          <td>Surname:</td>
+          <td><input type="text" class="add" value={Surname} onChange={(e) => setSurname(e.target.value)} /></td>
+        </tr>
+
+        <tr>
+        <td>Class:</td>
+        <td> <input type="text" value={Class} onChange={(e) => setClass(e.target.value)} /></td>
+        </tr>
+
+        <tr>
+        <td> Romana:</td>
+        <td> <input type="text" value={Romana} onChange={(e) => setRomana(e.target.value)} /></td>
+        </tr>
+
+        <tr>
+        <td> Matematica:</td>
+        <td> <input type="text" value={Mate} onChange={(e) => setMate(e.target.value)} /></td>
+        </tr>
+        
+        <tr>
+        <td> Info:</td>
+        <td><input type="text" value={Info} onChange={(e) => setInfo(e.target.value)} /></td>
+        </tr>
+        
+        <tr>
+        <td> Istoria:</td>
+        <td><input type="text" value={Istoria} onChange={(e) => setIstoria(e.target.value)} /></td>
+        </tr>
+        
+        <tr>
+        <td>Geografia:</td>
+        <td><input type="text" value={Geografia} onChange={(e) => setGeografia(e.target.value)} /></td>
+        </tr>
+        
+        <tr>
+        <td>Chimia:</td>
+        <td><input type="text" value={Chimia} onChange={(e) => setChimia(e.target.value)} /></td>
+        </tr>
+        
+        <tr>
+        <td>Fizica:</td>
+        <td><input type="text" value={Fizica} onChange={(e) => setFizica(e.target.value)} /></td>
+        </tr>
+
+        <tr>
+        <td> Ed. Fizica:</td>
+        <td><input type="text" value={Ed_Fiz} onChange={(e) => setEd_Fiz(e.target.value)} /></td>
+        </tr>
+        
+        <tr>
+        <td>Franceza:</td>
+        <td> <input type="text" value={Franceza} onChange={(e) => setFranceza(e.target.value)} /></td>
+        </tr>
+
+        <tr>
+        <td>Engleza:</td>
+        <td><input type="text" value={Engleza} onChange={(e) => setEngleza(e.target.value)} /></td>
+        </tr>
+
+        <tr>
+        <td>Biologia:</td>
+        <td><input type="text" value={Biologia} onChange={(e) => setBiologia(e.target.value)} /></td>
+        </tr>
+
+        <tr>
+        <td>Rusa:</td>
+        <td><input type="text" value={Rusa} onChange={(e) => setRusa(e.target.value)} /></td>
+        </tr>
+
       </form>
-      <button onClick={ShowElevi}>Show All</button>
-      <button onClick={ModifyElev}>Modify</button>
-      <button onClick={AddStudent}>Add Elev</button><br />
+      <button onClick={ShowElevi} class = "admn">Show All</button>
+      <button onClick={ModifyElev} class = "admn">Modify</button>
+      <button onClick={AddStudent} class = "admn">Add Elev</button><br />
 
       <h2>Search Elev:</h2>
       <form onSubmit={ShowElev} class = "search">
@@ -350,7 +382,7 @@ export const AddStudentForm = () => {
           By IDNP:
           <input type="text" value={searchIDNP} onChange={(e) => setSearchIDNP(e.target.value)} />
         </label>
-        <button type="submit">Search</button>
+        <button type="submit" class = "admn">Search</button>
       </form><br/>
       
       
@@ -371,6 +403,7 @@ export const AddStudentForm = () => {
         setEngleza(findStudent.Engleza),
         setBiologia(findStudent.Biologia),
         setRusa(findStudent.Rusa)
+        
       )}
 
 
@@ -389,13 +422,41 @@ export const AddStudentForm = () => {
           <option value="7">7</option>
           <option value="8">8</option>
           <option value="9">9</option>
-        </select> <br/>
-          <button onClick={getStudentsByClass}>Get Students by Class</button>
+        </select>
+          <button onClick={getStudentsByClass} class = "admn">Get Students</button>
       </label>
       <ul>
       </ul>
      </div>
+
+    <div>
+     <h2>Get Medie:</h2>
+     <label class = "search">
+        Select Sem:  
+        <select value={selectedClasSem} onChange={(e) => setSelectedClasSem(e.target.value)}>
+        <option value="1">Semestrul 1</option>
+          <option value="2">Semestrul 2</option>
+          <option value="3">Anual</option>
+        </select> <br/>
+        Select Class:  
+        <select value={selectedSem} onChange={(e) => setSelectedSem(e.target.value)}>
+        <option value="">All</option>
+          <option value="0">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+        </select> 
+          <button onClick={getStudentsByClassMed} class = "admn">Get Medie</button>
+      </label>
+      </div>
     </div>
+    
     {searchError && <p>{searchError}</p>}
       {searchedStudent && (
         <div class="elevdet">
@@ -416,14 +477,13 @@ export const AddStudentForm = () => {
           <p>Engleza: {searchedStudent.Engleza}</p>
           <p>Biologia: {searchedStudent.Biologia}</p>
           <p>Rusa: {searchedStudent.Rusa}</p>
-          
-        </div>
-      )}
+        </div>)}
+
 
       <p>  {responseMessage}</p>
       {studentsData.length > 0 && (
         <div class="search">
-          <h2>Elevi:</h2>
+          <h2>Elevi notes:</h2>
           <ol>
             {studentsData.map((student, index) => (
               <li key={index}>
@@ -448,6 +508,36 @@ export const AddStudentForm = () => {
           </ol>
         </div>
       )}
+     
+      <p>  {responseMessage}</p>
+      {studentsDataSem.length > 0 && (
+        <div class="search">
+          <h2>Elevi Medie:</h2>
+          <ol>
+            {studentsDataSem.map((student, index) => (
+              <li key={index}>
+                IDNP: {student.IDNP} <br/>
+                Name: {student.Name} <br/>
+                Surname: {student.Surname}<br/>
+                Class: {student.Class} <br/> 
+                Romana: {student.Romana} <br/> 
+                Matematica: {student.Mate} <br/>
+                Info: {student.Info} <br/>
+                Istoria: {student.Istoria} <br/>
+                Geografia: {student.Geografia} <br/>
+                Chimia: {student.Chimia} <br/>
+                Fizica: {student.Fizica} <br/>
+                Ed_Fiz: {student.Ed_Fiz} <br/>
+                Franceza: {student.Franceza} <br/>
+                Engleza: {student.Engleza} <br/>
+                Biologia: {student.Biologia} <br/>
+                Rusa: {student.Rusa} <br/>
+              </li>
+            ))}
+          </ol>
+        </div>
+      )}
+
     </div>
   );
 };
