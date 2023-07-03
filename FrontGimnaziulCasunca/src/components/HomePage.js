@@ -6,6 +6,7 @@ let token = "";
 export let FinToken = axios.defaults.headers.common['Authorization'] = null;
 
 export const HomePage = () => {
+
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isUserExist, setIsUserExist] = useState(null);
@@ -16,6 +17,7 @@ export const HomePage = () => {
     e.preventDefault();
     try {
       const response = await axios.post('/login', { username, password });
+       localStorage.setItem('username',username)
        token = response.data;
        token = token.token
       if (token) {

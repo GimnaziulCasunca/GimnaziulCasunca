@@ -7,6 +7,7 @@ const authMiddleware = require('./Midleware/authMidleware')
 router.post('/registration', controller.registration)
 router.post('/login', controller.login)
 router.get('/users', controller.getUsers)
+router.get('/users/:username', controller.getCurent)
 router.post('/newstud', controller.addstudent)
 router.post('/newstud2', controller.addstudent2)
 router.get('/newmed', controller.addMed)
@@ -25,6 +26,7 @@ router.put('/modstud/:idnp', controller.postElev)
 router.put('/modstud2/:idnp', controller.postElev2)
 router.delete('/delstud/:idnp', controller.deleteElev)
 router.delete('/delstud2/:idnp', controller.deleteElev2)
+router.delete('/cleardata', controller.ClearDB)
 
 
 module.exports = router

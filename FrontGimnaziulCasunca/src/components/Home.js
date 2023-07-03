@@ -3,6 +3,7 @@ import React, { useState} from 'react';
 import axios from 'axios';
 import {Link} from 'react-router-dom';
 
+
 export const Home = () => {
     const [searchIDNP, setSearchIDNP] = useState('');
     const [searchedStudent, setSearchedStudent] = useState(null);

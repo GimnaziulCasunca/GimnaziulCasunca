@@ -1,10 +1,29 @@
-import React, { useState} from 'react';
+import React, { useState, useEffect} from 'react';
 import axios from 'axios';
 import {Link} from 'react-router-dom';
-let FinToken = localStorage.getItem('token')
+
+
+let FinToken = localStorage.getItem('token'), User = localStorage.getItem('username') ;
 
 
 export const AddStudentForm = () => {
+  
+  const [user, setUser] = useState(null);
+  const username = User; // Provide the desired username here
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get(`/users`);
+        setUser(response.data);
+      } catch (error) {
+        console.error('Error fetching user:', error);
+      }
+    };
+
+    fetchUser();
+  }, [username]);
+
   const [IDNP, setIdnp] = React.useState('');
   const [Name, setName] = React.useState('');
   const [Surname, setSurname] = React.useState('');
@@ -308,7 +327,6 @@ export const AddStudentForm = () => {
   const logout = async () => {
       try {
         localStorage.setItem('token', '')
-        console.log(localStorage.getItem('token'))
       } catch (error) {
         console.error('Error', error.message);
       }
@@ -320,8 +338,14 @@ export const AddStudentForm = () => {
   return (
 
     <div>
+
+{/* {console.log("Rolul utilizatorului este", User.roles)} */}
       <Link to = "/"><button class="home"><h3><b>Home</b></h3></button></Link>
+
+      
       <Link to = "/login"><button onClick={logout} class="logout"><h3><b>LogOut</b></h3></button></Link>
+      
+
     <div class = "login-box">
       <form class="modify">
       
@@ -496,7 +520,17 @@ export const AddStudentForm = () => {
         </select> 
         
           <button onClick={getStudentsByClassMed} class = "admn">Get Medie</button>
-        
+
+          {user ? (
+        <div>
+          {user.username === "DirectorAdmin" ? 
+           <div>Doar la inceputul unui an nou <Link to = "/about" ><button><h3><b>NouAn</b></h3></button></Link></div>:
+          console.log("user")}
+        </div>
+      ) : (
+       console.log("err")
+      )}
+
       </label>
       </div>
     </div>

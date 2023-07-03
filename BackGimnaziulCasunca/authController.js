@@ -1,4 +1,5 @@
 const User = require('./models/User')
+const Curent = require('./models/Curent')
 const Role = require('./models/Role')
 const Elev = require('./models/Elev')
 const Elev2 = require('./models/Elev2')
@@ -16,7 +17,6 @@ const generateAccessToken = (id, roles) => {
     }
     return jwt.sign(payload, secret, {expiresIn: "24h"} )
 } 
-
 class authController{
     async registration(req, res){
         try {
@@ -43,7 +43,13 @@ class authController{
     
     async login(req, res){
         try {
+          //delet user at previeus sesion
+            await Curent.deleteMany();
             const {username, password} = req.body
+            const hashPassword = bcrypt.hashSync(password, 7);
+            const userRole = await Role.findOne({value: "USER"})
+            const userC = new Curent({username, password: hashPassword, roles: [userRole.value]})
+            await userC.save()
             const user = await User.findOne({username})
             if (!user) {
                 return res.status(400).json({message: `User ${username} not found`})
@@ -60,10 +66,10 @@ class authController{
 
         }
     }
-    
+
     async getUsers(req, res){
-        try {
-            const users = await User.find()
+      try {
+            const users = await Curent.findOne()
             res.json(users)
             res.json("server user")
         } catch (e) {
@@ -71,7 +77,51 @@ class authController{
         }
     }
 
-    //   ----------------------
+
+    async getCurent (req, res)  {
+      try {
+        const { username: selectedClass } = req.query;
+        let query = {};
+      
+        if (selectedClass) {
+          query.Class = selectedClass;
+        }
+      
+        // Assuming you have a data source or database
+        // Retrieve the students based on the selected class
+        const students = await Curent.find(query);
+
+        if (students.length > 0) {
+          res.status(200).json(students); // Return the students data as JSON response
+        } else {
+          res.status(404).json({ message: 'No students found' });
+        }
+      } catch (error) {
+        console.error('Error retrieving user:', error);
+        res.status(500).json({ message: 'Failed to retrieve user' });
+      }
+    };
+
+    
+
+    async ClearDB (req, res) {
+      
+      try {
+     
+        await Elev.deleteMany();
+        await Elev2.deleteMany();
+        await ElevM1.deleteMany();
+        await ElevM2.deleteMany();
+    
+        res.json({ message: 'Database cleared successfully' });
+      } catch (error) {
+        console.error('Error clearing database:', error);
+        res.status(500).json({ error: 'Server error' });
+      }
+    };
+    
+
+    //   ------------------------------------------------------------
    async addstudent (req, res) {
     try {
         const {IDNP, Name, Surname, Class, Romana, Mate, Info, Istoria, Geografia, Chimia, Fizica, Ed_Fiz, Franceza, Engleza, Biologia, Rusa } = req.body;
