@@ -17,6 +17,7 @@ const generateAccessToken = (id, roles) => {
     }
     return jwt.sign(payload, secret, {expiresIn: "24h"} )
 } 
+
 class authController{
     async registration(req, res){
         try {
@@ -124,12 +125,12 @@ class authController{
     //   ------------------------------------------------------------
    async addstudent (req, res) {
     try {
-        const {IDNP, Name, Surname, Class, Romana, Mate, Info, Istoria, Geografia, Chimia, Fizica, Ed_Fiz, Franceza, Engleza, Biologia, Rusa } = req.body;
+        const {IDNP, Name, Surname, Class, Romana, Mate, Info, Istoria, Geografia, Chimia, Fizica, Ed_Fiz, Stiinte, Engleza, Biologia, Rusa, Optional } = req.body;
                   const existingStudent = await Elev.findOne({IDNP});
                   if (existingStudent) {
                     return res.status(400).json({ error: 'Student '+`${Name+' '+Surname}` +' with idnp '+ `${IDNP}` + ' already exists '  });
                   }
-                  const student = new Elev({IDNP, Name, Surname, Class, Romana, Mate, Info, Istoria, Geografia, Chimia, Fizica, Ed_Fiz, Franceza, Engleza, Biologia, Rusa});
+                  const student = new Elev({IDNP, Name, Surname, Class, Romana, Mate, Info, Istoria, Geografia, Chimia, Fizica, Ed_Fiz, Stiinte, Engleza, Biologia, Rusa, Optional});
                   await student.save();
                   return res.json({message: "Elev succes aded !!!"})
     }catch (error) {
@@ -139,17 +140,21 @@ class authController{
  
 
   async addMed(req, res) {
+   
     async function GetMedia(str) {
+      if (!str) {
+        return 0; // Return 0 if the string is undefined or empty
+      }
       var numberPattern = /\d+/g; // Regular expression to match one or more digits
       var numbers = str.match(numberPattern); // Extract all numbers from the string
       var sum = 0;
-  
       if (numbers) {
         for (var i = 0; i < numbers.length; i++) {
           sum += parseInt(numbers[i]); // Convert each number to an integer and add to the sum
         }
         sum /= i;
       }
+    
       return sum;
     }
     
@@ -161,13 +166,30 @@ class authController{
       }
   
       for (const oldStudent of oldStudents) {
-        const Elev = await ElevM1.findOne({ IDNP: oldStudent.IDNP }); // Check if student already exists in the new database
+        const existingStudent = await ElevM1.findOne({ IDNP: oldStudent.IDNP }); // Check if student already exists in the new database
 
-      if (Elev) {
-        console.log(`Student with IDNP ${oldStudent.IDNP} already exists in the new database. Skipping...`);
-        continue; // Skip adding the student
-      }
+      if (existingStudent) {
+        existingStudent.Name = oldStudent.Name;
+        existingStudent.Surname = oldStudent.Surname;
+        existingStudent.Class = oldStudent.Class;
+        existingStudent.Romana = await GetMedia(oldStudent.Romana);
+        existingStudent.Mate = await GetMedia(oldStudent.Mate);
+        existingStudent.Info = await GetMedia(oldStudent.Info);
+        existingStudent.Istoria = await GetMedia(oldStudent.Istoria);
+        existingStudent.Geografia = await GetMedia(oldStudent.Geografia);
+        existingStudent.Chimia = await GetMedia(oldStudent.Chimia);
+        existingStudent.Fizica = await GetMedia(oldStudent.Fizica);
+        existingStudent.Ed_Fiz = await GetMedia(oldStudent.Ed_Fiz);
+        existingStudent.Stiinte = await GetMedia(oldStudent.Stiinte);
+        existingStudent.Engleza = await GetMedia(oldStudent.Engleza);
+        existingStudent.Biologia = await GetMedia(oldStudent.Biologia);
+        existingStudent.Rusa = await GetMedia(oldStudent.Rusa);
+        existingStudent.Optional = await GetMedia(oldStudent.Optional);
 
+        await existingStudent.save();
+        console.log(`Student with IDNP ${oldStudent.IDNP} updated in the new database.`);
+
+      }else{
         const romanaMedia = await GetMedia(oldStudent.Romana);
         const mateMedia = await GetMedia(oldStudent.Mate);
         const infoMedia = await GetMedia(oldStudent.Info);
@@ -176,11 +198,12 @@ class authController{
         const chimiaMedia = await GetMedia(oldStudent.Chimia);
         const fizicaMedia = await GetMedia(oldStudent.Fizica);
         const edFizMedia = await GetMedia(oldStudent.Ed_Fiz);
-        const francezaMedia = await GetMedia(oldStudent.Franceza);
+        const francezaMedia = await GetMedia(oldStudent.Stiinte);
         const englezaMedia = await GetMedia(oldStudent.Engleza);
         const biologiaMedia = await GetMedia(oldStudent.Biologia);
         const rusaMedia = await GetMedia(oldStudent.Rusa);
-  
+        const OptMedia = await GetMedia(oldStudent.Optional);
+
         const newElev = new ElevM1({
           IDNP: oldStudent.IDNP,
           Name: oldStudent.Name,
@@ -194,15 +217,17 @@ class authController{
           Chimia: chimiaMedia,
           Fizica: fizicaMedia,
           Ed_Fiz: edFizMedia,
-          Franceza: francezaMedia,
+          Stiinte: francezaMedia,
           Engleza: englezaMedia,
           Biologia: biologiaMedia,
-          Rusa: rusaMedia
+          Rusa: rusaMedia,
+          Optional: OptMedia
         });
-  
+
         await newElev.save();
+        console.log(`Student with IDNP ${oldStudent.IDNP} added to the new database.`);
+        }
       }
-  
       return res.json({ message: "Students successfully copied to the new database!" });
     } catch (error) {
       console.error('Error copying students:', error);
@@ -213,7 +238,7 @@ class authController{
   async postElev(req, res) {
     try {
       const { idnp } = req.params;
-      const { Name, Surname, Class, Romana, Mate, Info, Istoria, Geografia, Chimia, Fizica, Ed_Fiz, Franceza, Engleza, Biologia, Rusa } = req.body;
+      const { Name, Surname, Class, Romana, Mate, Info, Istoria, Geografia, Chimia, Fizica, Ed_Fiz, Stiinte, Engleza, Biologia, Rusa, Optional } = req.body;
   
       const existingStudent = await Elev.findOne({ IDNP: idnp });
   
@@ -232,12 +257,13 @@ class authController{
       existingStudent.Chimia = Chimia;
       existingStudent.Fizica = Fizica;
       existingStudent.Ed_Fiz = Ed_Fiz;
-      existingStudent.Franceza = Franceza;
+      existingStudent.Stiinte = Stiinte;
       existingStudent.Engleza = Engleza;
       existingStudent.Biologia = Biologia;
       existingStudent.Rusa = Rusa;
+      existingStudent.Optional = Optional;
       
-      // Romana, Mate, Info, Istoria, Geografia, Chimia, Fizica, Ed_Fiz, Franceza, Engleza, Bio, Rusa
+      // Romana, Mate, Info, Istoria, Geografia, Chimia, Fizica, Ed_Fiz, Stiinte, Engleza, Bio, Rusa
   
       const updatedStudent = await existingStudent.save();
   
@@ -325,9 +351,6 @@ class authController{
         if (selectedClass) {
           query.Class = selectedClass;
         }
-      
-        // Assuming you have a data source or database
-        // Retrieve the students based on the selected class
         const students = await ElevM1.find(query);
 
         if (students.length > 0) {
@@ -345,12 +368,12 @@ class authController{
 // ----------------------------------------------------------------------------------------------------------sem2
 async addstudent2 (req, res) {
   try {
-      const {IDNP, Name, Surname, Class, Romana, Mate, Info, Istoria, Geografia, Chimia, Fizica, Ed_Fiz, Franceza, Engleza, Biologia, Rusa } = req.body;
+      const {IDNP, Name, Surname, Class, Romana, Mate, Info, Istoria, Geografia, Chimia, Fizica, Ed_Fiz, Stiinte, Engleza, Biologia, Rusa, Optional } = req.body;
                 const existingStudent = await Elev2.findOne({IDNP});
                 if (existingStudent) {
                   return res.status(400).json({ error: 'Student '+`${Name+' '+Surname}` +' with idnp '+ `${IDNP}` + ' already exists '  });
                 }
-                const student = new Elev2({IDNP, Name, Surname, Class, Romana, Mate, Info, Istoria, Geografia, Chimia, Fizica, Ed_Fiz, Franceza, Engleza, Biologia, Rusa});
+                const student = new Elev2({IDNP, Name, Surname, Class, Romana, Mate, Info, Istoria, Geografia, Chimia, Fizica, Ed_Fiz, Stiinte, Engleza, Biologia, Rusa, Optional});
                 await student.save();
                 return res.json({message: "Elev succes aded !!!"})
   }catch (error) {
@@ -361,7 +384,7 @@ async addstudent2 (req, res) {
 async postElev2(req, res) {
   try {
     const { idnp } = req.params;
-    const { Name, Surname, Class, Romana, Mate, Info, Istoria, Geografia, Chimia, Fizica, Ed_Fiz, Franceza, Engleza, Biologia, Rusa } = req.body;
+    const { Name, Surname, Class, Romana, Mate, Info, Istoria, Geografia, Chimia, Fizica, Ed_Fiz, Stiinte, Engleza, Biologia, Rusa, Optional } = req.body;
 
     const existingStudent = await Elev2.findOne({ IDNP: idnp });
 
@@ -380,12 +403,13 @@ async postElev2(req, res) {
     existingStudent.Chimia = Chimia;
     existingStudent.Fizica = Fizica;
     existingStudent.Ed_Fiz = Ed_Fiz;
-    existingStudent.Franceza = Franceza;
+    existingStudent.Stiinte = Stiinte;
     existingStudent.Engleza = Engleza;
     existingStudent.Biologia = Biologia;
     existingStudent.Rusa = Rusa;
+    existingStudent.Optional = Optional;
     
-    // Romana, Mate, Info, Istoria, Geografia, Chimia, Fizica, Ed_Fiz, Franceza, Engleza, Bio, Rusa
+    // Romana, Mate, Info, Istoria, Geografia, Chimia, Fizica, Ed_Fiz, Stiinte, Engleza, Bio, Rusa
 
     const updatedStudent = await existingStudent.save();
 
@@ -526,10 +550,11 @@ async getElevi2(req, res){
           const chimiaMedia = await GetMedia(oldStudent.Chimia);
           const fizicaMedia = await GetMedia(oldStudent.Fizica);
           const edFizMedia = await GetMedia(oldStudent.Ed_Fiz);
-          const francezaMedia = await GetMedia(oldStudent.Franceza);
+          const francezaMedia = await GetMedia(oldStudent.Stiinte);
           const englezaMedia = await GetMedia(oldStudent.Engleza);
           const biologiaMedia = await GetMedia(oldStudent.Biologia);
           const rusaMedia = await GetMedia(oldStudent.Rusa);
+          const OptMedia = await GetMedia(oldStudent.Optional);
 
           const newElev = new ElevM2({
             IDNP: oldStudent.IDNP,
@@ -544,10 +569,11 @@ async getElevi2(req, res){
             Chimia: chimiaMedia,
             Fizica: fizicaMedia,
             Ed_Fiz: edFizMedia,
-            Franceza: francezaMedia,
+            Stiinte: francezaMedia,
             Engleza: englezaMedia,
             Biologia: biologiaMedia,
-            Rusa: rusaMedia
+            Rusa: rusaMedia,
+            Optional: OptMedia
           });
 
           await newElev.save();

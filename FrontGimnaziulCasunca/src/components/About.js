@@ -1,7 +1,9 @@
 // AboutPage.js
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 import axios from 'axios';
+import {Link} from 'react-router-dom';
+
 
 let del, pass, FinToken = localStorage.getItem('token')
 
@@ -29,10 +31,16 @@ export const AboutPage = () => {
   }};
   
   return( 
-  <div>
-  <button onClick={handleClearDatabase}>Clear Database </button>
-  
-  </div>
+    <div>
+        <Link to = "/modify"><button class="home"><h3><b>Back</b></h3></button></Link> 
+        <div class="container">
+            <div class="center">
+              <div class="center-align">Be careful, you will delete the database:<br/>
+                <button class="cleardata"  onClick={handleClearDatabase}>Clear Database </button>
+              </div>
+            </div>
+        </div>
+    </div>
   )}
 
 export default AboutPage;

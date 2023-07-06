@@ -35,11 +35,11 @@ export const AddStudentForm = () => {
   const [Geografia, setGeografia] = React.useState('');
   const [Chimia, setChimia] = React.useState('');
   const [Fizica, setFizica] = React.useState('');
-  const [Ed_Fiz, setEd_Fiz] = React.useState('');
-  const [Franceza, setFranceza] = React.useState('');
+  const [Stiinte, setStiinte] = React.useState('');
   const [Engleza, setEngleza] = React.useState('');
   const [Biologia, setBiologia] = React.useState('');
   const [Rusa, setRusa] = React.useState('');
+  const [Optional, setOptional] = React.useState('');
   const [studentsData, setStudentsData] = useState([]);
   const [studentsDataSem, setStudentsDataSem] = useState([]);
   const [responseMessage, setResponseMessage] = useState('');
@@ -50,7 +50,7 @@ export const AddStudentForm = () => {
   const [selectedClass, setSelectedClass] = useState('');
   const [selectedClasSem, setSelectedClasSem] = useState('');
   const [selectedSem, setSelectedSem] = useState('');
-  // let Obiecte = {Romana, Mate, Info, Istoria, Geografia, Chimia, Fizica, Ed_Fiz, Franceza, Engleza, Biologia, Rusa}
+  // let Obiecte = {Romana, Mate, Info, Istoria, Geografia, Chimia, Fizica, Ed_Fiz, Stiinte, Engleza, Biologia, Rusa}
   let message = "";
     // adaugarea unui nou elev
     const AddStudent = async (e) => {
@@ -58,11 +58,12 @@ export const AddStudentForm = () => {
       if(FinToken){
         try {
           message = "";
-          const studentData = { IDNP, Name, Surname, Class, Romana, Mate, Info, Istoria, Geografia, Chimia, Fizica, Ed_Fiz, Franceza, Engleza, Biologia, Rusa  };
+          const studentData = { IDNP, Name, Surname, Class, Romana, Mate, Info, Istoria, Geografia, Chimia, Fizica, Stiinte, Engleza, Biologia, Rusa, Optional  };
           let response;
-          {selectedSem === "1"?
-            response = await axios.post('/newstud', studentData):
-            response = await axios.post('/newstud2', studentData)}
+          {selectedSem === "2"?
+            response = await axios.post('/newstud2', studentData):
+            response = await axios.post('/newstud', studentData)
+          }
            
           console.log(response.data); // Success message from the server
           setIdnp('');
@@ -76,11 +77,11 @@ export const AddStudentForm = () => {
           setGeografia('');
           setChimia('');
           setFizica('');
-          setEd_Fiz('');
-          setFranceza('');
+          setStiinte('');
           setEngleza('');
           setBiologia('');
           setRusa('');
+          setOptional('');
           message = "Student successfully added.";
           alert(message);
         } catch (error) {
@@ -99,11 +100,11 @@ export const AddStudentForm = () => {
     e.preventDefault();
     if(FinToken){
       try {
-          const studentData = { IDNP, Name, Surname, Class, Romana, Mate, Info, Istoria, Geografia, Chimia, Fizica, Ed_Fiz, Franceza, Engleza, Biologia, Rusa };
+          const studentData = { IDNP, Name, Surname, Class, Romana, Mate, Info, Istoria, Geografia, Chimia, Fizica, Stiinte, Engleza, Biologia, Rusa, Optional };
           let response;
-          {selectedSem === "1"?
-            response = await axios.get('/elevi', studentData):
-            response = await axios.get('/elevi2', studentData)
+          {selectedSem === "2"?
+            response = await axios.get('/elevi2', studentData):
+            response = await axios.get('/elevi', studentData)
           }
           setStudentsDataSem('');
           setStudentsData(response.data);
@@ -126,9 +127,9 @@ export const AddStudentForm = () => {
     if(FinToken){
       try {
         let response;
-          {selectedSem === "1"?
-            response = await axios.get(`/elev/${searchIDNP}`):
-            response = await axios.get(`/elev2/${searchIDNP}`)
+          {selectedSem === "2"?
+            response = await axios.get(`/elev2/${searchIDNP}`):
+            response = await axios.get(`/elev/${searchIDNP}`)
           }
         
         setSearchedStudent(response.data);
@@ -156,9 +157,9 @@ export const AddStudentForm = () => {
     if(FinToken){
       try {
         let response;
-          {selectedSem === "1"?
-            response = await axios.get(`/elev/${IDNP}`):
-            response = await axios.get(`/elev2/${IDNP}`)
+          {selectedSem === "2"?
+            response = await axios.get(`/elev2/${IDNP}`):
+            response = await axios.get(`/elev/${IDNP}`)
           }
 
         setFindStudent('');
@@ -172,11 +173,11 @@ export const AddStudentForm = () => {
         setGeografia(response.data.Geografia);
         setChimia(response.data.Chimia);
         setFizica(response.data.Fizica);
-        setEd_Fiz(response.data.Ed_Fiz);
-        setFranceza(response.data.Franceza);
+        setStiinte(response.data.Stiinte);
         setEngleza(response.data.Engleza);
         setBiologia(response.data.Biologia);
         setRusa(response.data.Rusa);
+        setOptional(response.data.Optional);
         setSearchError('');
       } catch (error) {
         if (error.response && error.response.status === 404) {
@@ -200,11 +201,11 @@ export const AddStudentForm = () => {
     if(FinToken){
       try {
         message = "";
-        const studentData = { IDNP, Name, Surname, Class, Romana, Mate, Info, Istoria, Geografia, Chimia, Fizica, Ed_Fiz, Franceza, Engleza, Biologia, Rusa };
+        const studentData = { IDNP, Name, Surname, Class, Romana, Mate, Info, Istoria, Geografia, Chimia, Fizica, Stiinte, Engleza, Biologia, Rusa, Optional };
         let response;
-          {selectedSem === "1"?
-            response = await axios.put(`/modstud/${IDNP}`, studentData):
-            response = await axios.put(`/modstud2/${IDNP}`, studentData)
+          {selectedSem === "2"?
+            response = await axios.put(`/modstud2/${IDNP}`, studentData):
+            response = await axios.put(`/modstud/${IDNP}`, studentData)
           }
         
         console.log(response.data); // Success message from the server
@@ -219,11 +220,11 @@ export const AddStudentForm = () => {
         setGeografia('');
         setChimia('');
         setFizica('');
-        setEd_Fiz('');
-        setFranceza('');
+        setStiinte('');
         setEngleza('');
         setBiologia('');
         setRusa('');
+        setOptional('');
         message = "Student successfully modify.";
         alert(message);
       } catch (error) {
@@ -247,9 +248,9 @@ export const AddStudentForm = () => {
         del = prompt("Are you sure you want to delete the elev (y,n)?");
         if(del==='y') { 
           let response;
-          {selectedSem === "1"?
-            response = await axios.delete(`/delstud/${IDNP}`):
-            response = await axios.delete(`/delstud2/${IDNP}`)
+          {selectedSem === "2"?
+            response = await axios.delete(`/delstud2/${IDNP}`):
+            response = await axios.delete(`/delstud/${IDNP}`)
           }
         
           alert("Elev is deleted succes");
@@ -277,9 +278,9 @@ export const AddStudentForm = () => {
     if(FinToken){
       try {
         let response;
-        {selectedSem === "1"?
-          response = await axios.get(`/getclass?class=${selectedClass}`):
-          response = await axios.get(`/getclass2?class=${selectedClass}`)
+        {selectedSem === "2"?
+          response = await axios.get(`/getclass2?class=${selectedClass}`):
+          response = await axios.get(`/getclass?class=${selectedClass}`)
         }
         
         setStudentsDataSem('');
@@ -299,16 +300,16 @@ export const AddStudentForm = () => {
     if(FinToken){
       try {
         let newmed;
-        {selectedSem === "1"?
-          newmed = await axios.get(`/newmed`):
-          newmed = await axios.get(`/newmed2`)
+        {selectedSem === "2"?
+          newmed = await axios.get(`/newmed2`):
+          newmed = await axios.get(`/newmed`)
         }
         console.log(newmed.data); //asg
         
         let response;
-        {selectedSem === "1"?
-          response = await axios.get(`/getclassmed?class=${selectedClasSem}`):
-          response = await axios.get(`/getclassmed2?class=${selectedClasSem}`)
+        {selectedSem === "2"?
+          response = await axios.get(`/getclassmed2?class=${selectedClasSem}`):
+          response = await axios.get(`/getclassmed?class=${selectedClasSem}`)
         }
         setStudentsData('');
         setStudentsDataSem(response.data);
@@ -351,13 +352,10 @@ export const AddStudentForm = () => {
       
       <h2>Select Sem: 
       <select value={selectedSem} onChange={(e) => setSelectedSem(e.target.value)}>
-          <option value="0">Select</option>
           <option value="1">Semestrul 1</option>
           <option value="2">Semestrul 2</option>
         </select>
         </h2>
-
-
 
       <h2>Add/Modify elev:</h2>
         <tr>
@@ -417,15 +415,10 @@ export const AddStudentForm = () => {
         <td>Fizica:</td>
         <td><input type="text" value={Fizica} onChange={(e) => setFizica(e.target.value)} /></td>
         </tr>
-
-        <tr>
-        <td> Ed. Fizica:</td>
-        <td><input type="text" value={Ed_Fiz} onChange={(e) => setEd_Fiz(e.target.value)} /></td>
-        </tr>
         
         <tr>
-        <td>Franceza:</td>
-        <td> <input type="text" value={Franceza} onChange={(e) => setFranceza(e.target.value)} /></td>
+        <td>Știinte:</td>
+        <td> <input type="text" value={Stiinte} onChange={(e) => setStiinte(e.target.value)} /></td>
         </tr>
 
         <tr>
@@ -441,6 +434,11 @@ export const AddStudentForm = () => {
         <tr>
         <td>Rusa:</td>
         <td><input type="text" value={Rusa} onChange={(e) => setRusa(e.target.value)} /></td>
+        </tr>
+        
+        <tr>
+        <td>Opțional:</td>
+        <td><input type="text" value={Optional} onChange={(e) => setOptional(e.target.value)} /></td>
         </tr>
 
       </form>
@@ -470,11 +468,11 @@ export const AddStudentForm = () => {
         setGeografia(findStudent.Geografia),
         setChimia(findStudent.Chimia),
         setFizica(findStudent.Fizica),
-        setEd_Fiz(findStudent.Ed_Fiz),
-        setFranceza(findStudent.Franceza),
+        setStiinte(findStudent.Stiinte),
         setEngleza(findStudent.Engleza),
         setBiologia(findStudent.Biologia),
-        setRusa(findStudent.Rusa)
+        setRusa(findStudent.Rusa),
+        setOptional(findStudent.Optional)
         
       )}
 
@@ -521,22 +519,22 @@ export const AddStudentForm = () => {
         
           <button onClick={getStudentsByClassMed} class = "admn">Get Medie</button>
 
-          {user ? (
-        <div>
-          {user.username === "DirectorAdmin" ? 
-           <div>Doar la inceputul unui an nou <Link to = "/about" ><button><h3><b>NouAn</b></h3></button></Link></div>:
-          console.log("user")}
-        </div>
-      ) : (
-       console.log("err")
-      )}
+        {user ? (
+          <div>
+            {user.username === "DirectorAdmin" ? 
+            <div>Doar la inceputul unui an nou <Link to = "/about" ><button class="clr"><h3><b>Clear Data</b></h3></button></Link></div>:
+            console.log("user")}
+          </div>
+        ) : (
+        console.log("err")
+        )}
 
       </label>
       </div>
     </div>
-    
+
     {searchError && <p>{searchError}</p>}
-      {searchedStudent && (
+      {searchedStudent && (searchedStudent.Class === 7 ||searchedStudent.Class === 8 ||searchedStudent.Class === 9)  && (
         <div class="elevdet">
           <h2>Elev Details:</h2>
           <p>IDNP: {searchedStudent.IDNP}</p>
@@ -544,78 +542,151 @@ export const AddStudentForm = () => {
           <p>Surname: {searchedStudent.Surname}</p>
           <p>Class: {searchedStudent.Class}</p>
           <p>Limba și literatura română: {searchedStudent.Romana}</p>
+          <p>Eng/Fr: {searchedStudent.Engleza}</p>
+          <p>Rusa: {searchedStudent.Rusa}</p>
           <p>Matematica: {searchedStudent.Mate}</p>
-          <p>Informatica: {searchedStudent.Informatica}</p>
+          {/* <p>Stiinte: {searchedStudent.Stiinte}</p> */}
+          <p>Biologia: {searchedStudent.Biologia}</p>
+          <p>Fizica: {searchedStudent.Fizica}</p>
+          <p>Chimia: {searchedStudent.Chimia}</p>
+          <p>Informatica: {searchedStudent.Info}</p>
           <p>Istoria: {searchedStudent.Istoria}</p>
           <p>Geografia: {searchedStudent.Geografia}</p>
-          <p>Chimia: {searchedStudent.Chimia}</p>
-          <p>Fizica: {searchedStudent.Fizica}</p>
-          <p>Ed.Fizica: {searchedStudent.Ed_Fiz}</p>
-          <p>Franceza: {searchedStudent.Franceza}</p>
-          <p>Engleza: {searchedStudent.Engleza}</p>
-          <p>Biologia: {searchedStudent.Biologia}</p>
+          <p>Optional: {searchedStudent.Optional}</p>
+        </div>)}
+    
+      {searchedStudent && searchedStudent.Class === 6 && (
+        <div class="elevdet">
+          <h2>Elev Details:</h2>
+          <p>IDNP: {searchedStudent.IDNP}</p>
+          <p>Name: {searchedStudent.Name}</p>
+          <p>Surname: {searchedStudent.Surname}</p>
+          <p>Class: {searchedStudent.Class}</p>
+          <p>Limba și literatura română: {searchedStudent.Romana}</p>
+          <p>Eng/Fr: {searchedStudent.Engleza}</p>
           <p>Rusa: {searchedStudent.Rusa}</p>
+          <p>Matematica: {searchedStudent.Mate}</p>
+          {/* <p>Stiinte: {searchedStudent.Stiinte}</p> */}
+          <p>Biologia: {searchedStudent.Biologia}</p>
+          <p>Fizica: {searchedStudent.Fizica}</p>
+          {/* <p>Chimia: {searchedStudent.Chimia}</p>
+          <p>Informatica: {searchedStudent.Info}</p>*/}
+          <p>Istoria: {searchedStudent.Istoria}</p>
+          <p>Geografia: {searchedStudent.Geografia}</p> 
+          <p>Optional: {searchedStudent.Optional}</p>
+        </div>)}
+    
+      {searchedStudent && searchedStudent.Class === 5 && (
+        <div class="elevdet">
+          <h2>Elev Details:</h2>
+          <p>IDNP: {searchedStudent.IDNP}</p>
+          <p>Name: {searchedStudent.Name}</p>
+          <p>Surname: {searchedStudent.Surname}</p>
+          <p>Class: {searchedStudent.Class}</p>
+          <p>Limba și literatura română: {searchedStudent.Romana}</p>
+          <p>Eng/Fr: {searchedStudent.Engleza}</p>
+          <p>Rusa: {searchedStudent.Rusa}</p>
+          <p>Matematica: {searchedStudent.Mate}</p>
+          <p>Stiinte: {searchedStudent.Stiinte}</p> 
+          {/* <p>Biologia: {searchedStudent.Biologia}</p>
+          <p>Fizica: {searchedStudent.Fizica}</p> */}
+          {/* <p>Chimia: {searchedStudent.Chimia}</p>
+          <p>Informatica: {searchedStudent.Info}</p>*/}
+          <p>Istoria: {searchedStudent.Istoria}</p>
+          <p>Geografia: {searchedStudent.Geografia}</p> 
+          <p>Optional: {searchedStudent.Optional}</p>
         </div>)}
 
 
       <p>  {responseMessage}</p>
-      {studentsData.length > 0 && (
+      { studentsData.length > 0 && (
         <div class="search">
           <h2>Elevi notes:</h2>
           <ol>
-            {studentsData.map((student, index) => (
-              <li key={index}>
-                IDNP: {student.IDNP} <br/>
-                Name: {student.Name} <br/>
-                Surname: {student.Surname}<br/>
-                Class: {student.Class} <br/> 
-                Romana: {student.Romana} <br/> 
-                Matematica: {student.Mate} <br/>
-                Info: {student.Info} <br/>
-                Istoria: {student.Istoria} <br/>
-                Geografia: {student.Geografia} <br/>
-                Chimia: {student.Chimia} <br/>
-                Fizica: {student.Fizica} <br/>
-                Ed_Fiz: {student.Ed_Fiz} <br/>
-                Franceza: {student.Franceza} <br/>
-                Engleza: {student.Engleza} <br/>
-                Biologia: {student.Biologia} <br/>
-                Rusa: {student.Rusa} <br/>
-              </li>
+                {studentsData.map((student, index) => (
+                  <li key={index}>
+                    IDNP: {student.IDNP} <br />
+                    Name: {student.Name} <br />
+                    Surname: {student.Surname}<br />
+                    Class: {student.Class} <br />
+                    Romana: {student.Romana} <br />
+                    Eng/Fr: {student.Engleza} <br />
+                    Rusa: {student.Rusa} <br />
+                    Matematica: {student.Mate} <br />
+                    Istoria: {student.Istoria} <br />
+                    Geografia: {student.Geografia} <br />
+                      {(student.Class === 7 || student.Class === 8 || student.Class === 9) && (
+                        <React.Fragment>
+                          Biologia: {student.Biologia} <br />
+                          Fizica: {student.Fizica} <br />
+                          Chimia: {student.Chimia} <br />
+                          Info: {student.Info} <br />
+                        </React.Fragment>
+                      )}
+                      {student.Class === 6 && (
+                        <React.Fragment>
+                          Biologia: {student.Biologia} <br />
+                          Fizica: {student.Fizica} <br />
+                        </React.Fragment>
+                      )}
+                      {student.Class === 5 && (
+                        <React.Fragment>
+                         Stiinte: {student.Stiinte} <br />
+                        </React.Fragment>
+                      )}
+                    {/* Biologia: {student.Biologia} <br /> */}
+                    Optional: {student.Optional} <br />
+                  </li>
             ))}
           </ol>
         </div>
       )}
      
-      <p>  {responseMessage}</p>
 
+      <p>  {responseMessage}</p>
       {studentsDataSem.length > 0 && (
         <div class="search">
           <h2>Elevi Medie:</h2>
           <ol>
-            {studentsDataSem.map((student, index) => (
-              <li key={index}>
-                IDNP: {student.IDNP} <br/>
-                Name: {student.Name} <br/>
-                Surname: {student.Surname}<br/>
-                Class: {student.Class} <br/> 
-                Romana: {student.Romana} <br/> 
-                Matematica: {student.Mate} <br/>
-                Info: {student.Info} <br/>
-                Istoria: {student.Istoria} <br/>
-                Geografia: {student.Geografia} <br/>
-                Chimia: {student.Chimia} <br/>
-                Fizica: {student.Fizica} <br/>
-                Ed_Fiz: {student.Ed_Fiz} <br/>
-                Franceza: {student.Franceza} <br/>
-                Engleza: {student.Engleza} <br/>
-                Biologia: {student.Biologia} <br/>
-                Rusa: {student.Rusa} <br/>
-              </li>
+          {studentsDataSem.map((student, index) => (
+                  <li key={index}>
+                    IDNP: {student.IDNP} <br />
+                    Name: {student.Name} <br />
+                    Surname: {student.Surname}<br />
+                    Class: {student.Class} <br />
+                    Romana: {student.Romana} <br />
+                    Eng/Fr: {student.Engleza} <br />
+                    Rusa: {student.Rusa} <br />
+                    Matematica: {student.Mate} <br />
+                    Istoria: {student.Istoria} <br />
+                    Geografia: {student.Geografia} <br />
+                      {(student.Class === 7 || student.Class === 8 || student.Class === 9) && (
+                        <React.Fragment>
+                          Biologia: {student.Biologia} <br />
+                          Fizica: {student.Fizica} <br />
+                          Chimia: {student.Chimia} <br />
+                          Info: {student.Info} <br />
+                        </React.Fragment>
+                      )}
+                      {student.Class === 6 && (
+                        <React.Fragment>
+                          Biologia: {student.Biologia} <br />
+                          Fizica: {student.Fizica} <br />
+                        </React.Fragment>
+                      )}
+                      {student.Class === 5 && (
+                        <React.Fragment>
+                         Stiinte: {student.Stiinte} <br />
+                        </React.Fragment>
+                      )}
+                    {/* Biologia: {student.Biologia} <br /> */}
+                    Optional: {student.Optional} <br />
+                  </li>
             ))}
           </ol>
         </div>
       )}
+
 
     </div>
   );

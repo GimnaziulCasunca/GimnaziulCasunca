@@ -24,9 +24,10 @@ export const Home = () => {
         setSearchedStudent(null);
       }
     };
+
     
-    return (
-<div>
+return (
+ <div>
     <Link to = "/login" class="home"><button><h3><b>Log In</b></h3></button></Link>
      <div class = "login-box">
       <h2>Search Elev:</h2>
