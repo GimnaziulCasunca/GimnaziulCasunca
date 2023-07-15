@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 const authRouter = require('./authRoutes')
 const path = require('path');
 const PORT = process.env.PORT || 3001
-
+const MONGODB_URI = `mongodb+srv://user:user123@atlascluster.6aobwop.mongodb.net/GimnaziulCasunca?retryWrites=true&w=majority`
 const app = express()
 
 
@@ -16,13 +16,15 @@ app.use(express.json())
 
 app.use('/', authRouter)
 
-// app.use(express.static(path.join(__dirname, 'C:\Users\Linkln\Desktop\Proiecte\gimnaziu\src\App.js')));
+app.use(express.static(path.join(__dirname, 'GimnaziulCasunca\FrontGimnaziulCasunca\build')));
 
-
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'GimnaziulCasunca\FrontGimnaziulCasunca\build', 'index.html'));
+});
 
 const start = async () => {
   try{
-    await mongoose.connect(`mongodb+srv://user:user123@atlascluster.6aobwop.mongodb.net/GimnaziulCasunca?retryWrites=true&w=majority`)
+    await mongoose.connect(MONGODB_URI)
     app.listen(PORT, ()=>console.log(`server work on port ${PORT}`))
   }catch(e){
     console.log(e)

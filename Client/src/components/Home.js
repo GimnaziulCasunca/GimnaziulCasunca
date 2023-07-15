@@ -41,27 +41,69 @@ return (
       </form>
 
         {searchError && <p>{searchError}</p>}
-        {searchedStudent && (
-          <div class="info">
-            <p>IDNP: {searchedStudent.IDNP}</p>
-            <p>Name: {searchedStudent.Name}</p>
-            <p>Surname: {searchedStudent.Surname}</p>
-            <p>Class: {searchedStudent.Class}</p>
-            <p>Româna: {searchedStudent.Romana}</p>
-            <p>Matematica: {searchedStudent.Mate}</p>
-            <p>Informatica: {searchedStudent.Informatica}</p>
-            <p>Istoria: {searchedStudent.Istoria}</p>
-            <p>Geografia: {searchedStudent.Geografia}</p>
-            <p>Chimia: {searchedStudent.Chimia}</p>
-            <p>Fizica: {searchedStudent.Fizica}</p>
-            <p>Ed.Fizica: {searchedStudent.Ed_Fizica}</p>
-            <p>Franceza: {searchedStudent.Franceza}</p>
-            <p>Engleza: {searchedStudent.Engleza}</p>
-            <p>Biologia: {searchedStudent.Biologia}</p>
-            <p>Rusa: {searchedStudent.Rusa}</p>
+        {searchedStudent && (searchedStudent.Class === 7 ||searchedStudent.Class === 8 ||searchedStudent.Class === 9)  && (
+        <div class="info">
+          <h2>Elev Details:</h2>
+          <p>IDNP: {searchedStudent.IDNP}</p>
+          <p>Name: {searchedStudent.Name}</p>
+          <p>Surname: {searchedStudent.Surname}</p>
+          <p>Class: {searchedStudent.Class}</p>
+          <p>Limba și literatura română: {searchedStudent.Romana}</p>
+          <p>Eng/Fr: {searchedStudent.Engleza}</p>
+          <p>Rusa: {searchedStudent.Rusa}</p>
+          <p>Matematica: {searchedStudent.Mate}</p>
+          {/* <p>Stiinte: {searchedStudent.Stiinte}</p> */}
+          <p>Biologia: {searchedStudent.Biologia}</p>
+          <p>Fizica: {searchedStudent.Fizica}</p>
+          <p>Chimia: {searchedStudent.Chimia}</p>
+          <p>Informatica: {searchedStudent.Info}</p>
+          <p>Istoria: {searchedStudent.Istoria}</p>
+          <p>Geografia: {searchedStudent.Geografia}</p>
+          <p>Optional: {searchedStudent.Optional}</p>
+        </div>)}
+    
+      {searchedStudent && searchedStudent.Class === 6 && (
+        <div class="info">
+          <h2>Elev Details:</h2>
+          <p>IDNP: {searchedStudent.IDNP}</p>
+          <p>Name: {searchedStudent.Name}</p>
+          <p>Surname: {searchedStudent.Surname}</p>
+          <p>Class: {searchedStudent.Class}</p>
+          <p>Limba și literatura română: {searchedStudent.Romana}</p>
+          <p>Eng/Fr: {searchedStudent.Engleza}</p>
+          <p>Rusa: {searchedStudent.Rusa}</p>
+          <p>Matematica: {searchedStudent.Mate}</p>
+          {/* <p>Stiinte: {searchedStudent.Stiinte}</p> */}
+          <p>Biologia: {searchedStudent.Biologia}</p>
+          <p>Fizica: {searchedStudent.Fizica}</p>
+          {/* <p>Chimia: {searchedStudent.Chimia}</p>
+          <p>Informatica: {searchedStudent.Info}</p>*/}
+          <p>Istoria: {searchedStudent.Istoria}</p>
+          <p>Geografia: {searchedStudent.Geografia}</p> 
+          <p>Optional: {searchedStudent.Optional}</p>
+        </div>)}
+    
+      {searchedStudent && searchedStudent.Class === 5 && (
+        <div class="info">
+          <h2>Elev Details:</h2>
+          <p>IDNP: {searchedStudent.IDNP}</p>
+          <p>Name: {searchedStudent.Name}</p>
+          <p>Surname: {searchedStudent.Surname}</p>
+          <p>Class: {searchedStudent.Class}</p>
+          <p>Limba și literatura română: {searchedStudent.Romana}</p>
+          <p>Eng/Fr: {searchedStudent.Engleza}</p>
+          <p>Rusa: {searchedStudent.Rusa}</p>
+          <p>Matematica: {searchedStudent.Mate}</p>
+          <p>Stiinte: {searchedStudent.Stiinte}</p> 
+          {/* <p>Biologia: {searchedStudent.Biologia}</p>
+          <p>Fizica: {searchedStudent.Fizica}</p> */}
+          {/* <p>Chimia: {searchedStudent.Chimia}</p>
+          <p>Informatica: {searchedStudent.Info}</p>*/}
+          <p>Istoria: {searchedStudent.Istoria}</p>
+          <p>Geografia: {searchedStudent.Geografia}</p> 
+          <p>Optional: {searchedStudent.Optional}</p>
+        </div>)}
 
-          </div>
-        )}
      </div>
          
 </div>   
