@@ -3,6 +3,7 @@ import React, { useState} from 'react';
 import axios from 'axios';
 import {Link} from 'react-router-dom';
 let token = "";
+const logo = require('./favicon0.png');
 export let FinToken = axios.defaults.headers.common['Authorization'] = null;
 
 export const HomePage = () => {
@@ -40,7 +41,8 @@ export const HomePage = () => {
 
   return (
   <div>
-  <Link to = "/" class="home"><button><h3><b>Home</b></h3></button></Link>
+  <Link to = "/" class="logout"><button><h3><b>Home</b></h3></button></Link>
+  <img src={logo} class="logo" />  
 
   <div class = "login-box">
     <form onSubmit = {LogIn}>

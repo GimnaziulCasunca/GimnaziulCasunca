@@ -130,10 +130,13 @@ body{
 }
 
 .logout{
-  position:relative;
+  position:absolute;
   right: 1%;
-  top: 0.1%;
-  left: 91%;
+  top: 0.5%;
+}
+
+.logo{
+  position: relative;
 }
 
 .clr{
@@ -146,11 +149,14 @@ body{
   position: relative;
   left: 0.5%;
   top: 0.1%;
+  width: 65px;
+  align-content: center;
 }
 
 .admn{
   margin-left: 1%;
 }
+
 .container {
   height: 200px;
   position: relative;
@@ -164,10 +170,12 @@ body{
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
 }
+
 .center-align{
   color: white;
   text-align: center;
 }
+
 .cleardata{
   box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
   width: 105px;

@@ -2,7 +2,7 @@
 import React, { useState} from 'react';
 import axios from 'axios';
 import {Link} from 'react-router-dom';
-
+const logo = require('./favicon0.png');
 
 export const Home = () => {
     const [searchIDNP, setSearchIDNP] = useState('');
@@ -25,10 +25,10 @@ export const Home = () => {
       }
     };
 
-    
 return (
  <div>
-    <Link to = "/login" class="home"><button><h3><b>Log In</b></h3></button></Link>
+    <Link to = "/login" class="logout"><button><h3><b>Log In</b></h3></button></Link>
+    <img src={logo} />
      <div class = "login-box">
       <h2>Search Elev:</h2>
       <form onSubmit={ShowElev}>
@@ -39,7 +39,6 @@ return (
         <button type="submit" class="btn">Search</button>
         
       </form>
-
         {searchError && <p>{searchError}</p>}
         {searchedStudent && (searchedStudent.Class === 7 ||searchedStudent.Class === 8 ||searchedStudent.Class === 9)  && (
         <div class="info">

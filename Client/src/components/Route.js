@@ -1,6 +1,7 @@
 import React, { useState, useEffect} from 'react';
 import axios from 'axios';
 import {Link} from 'react-router-dom';
+const logo = require('./favicon0.png');
 
 
 let FinToken = localStorage.getItem('token'), User = localStorage.getItem('username') ;
@@ -340,11 +341,15 @@ export const AddStudentForm = () => {
 
     <div>
 
-{/* {console.log("Rolul utilizatorului este", User.roles)} */}
-      <Link to = "/"><button class="home"><h3><b>Home</b></h3></button></Link>
-
-      
-      <Link to = "/login"><button onClick={logout} class="logout"><h3><b>LogOut</b></h3></button></Link>
+      <img src={logo} class="home" />  
+      <tr class="logout">
+        <td >
+          <Link to = "/"><button ><h3><b>Home</b></h3></button></Link>
+        </td>
+        <td>
+          <Link to = "/login"><button onClick={logout}><h3><b>LogOut</b></h3></button></Link>
+        </td>
+      </tr>
       
 
     <div class = "login-box">
